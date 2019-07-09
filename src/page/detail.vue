@@ -59,7 +59,7 @@
                             量：
                         </span>
                         <div class="clearfix props-number">
-                            <input class="props-input fl" type="number" v-model="goodsNumber">
+                            <input class="props-input fl" type="number" v-model="goodsNumber" />
                             <div class="change-box fl">
                                 <div class="change-value" @click="add">+</div>
                                 <div class="change-value" @click="sub">-</div>
@@ -81,7 +81,7 @@
                     v-for="(item, index) in goodsDetailData.information"
                     :key="index"
                     :src="item"
-                >
+                />
             </div>
         </div>
         <Footer></Footer>
@@ -123,12 +123,17 @@ export default {
             this.goodsNumber--;
         },
         addShopCar() {
+            // this.goodsNumber += this.goodsNumber;
             this.$store.commit("shopCarData", {
                 data: this.goodsDetailData,
                 number: this.goodsNumber
             });
         },
         goToShopCar() {
+            this.$store.commit("shopCarData", {
+                data: this.goodsDetailData,
+                number: this.goodsNumber
+            });
             this.$router.push({
                 name: "shopcar"
             });

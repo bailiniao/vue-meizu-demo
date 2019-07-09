@@ -3,13 +3,13 @@
         <div class="header-wrapper clearfix">
             <div class="header-logo fl"></div>
             <div class="header-cart fr">
-                <span class="icon-moon icon-cart"></span>
+                <span class="icon-moon icon-cart" @click="goToShopcar"></span>
             </div>
             <div class="header-user fr">
                 <span class="icon-moon icon-user"></span>
             </div>
             <div class="header-search fr">
-                <input class="search-input" type="text" placeholder="购物车">
+                <input class="search-input" type="text" placeholder="购物车" />
                 <span class="search-icon icon-moon icon-search"></span>
             </div>
             <ul class="header-nav fr">
@@ -36,7 +36,7 @@
                             :data-timeindex="index"
                             class="childern-item"
                         >
-                            <img :src="item.pic" alt>
+                            <img :src="item.pic" alt />
                             <p>{{item.name}}</p>
                             <p>{{item.price}}</p>
                         </li>
@@ -91,6 +91,11 @@ export default {
             this.$router.push({
                 name: "category"
             });
+        },
+        goToShopcar() {
+            this.$router.push({
+                name:'shopcar'
+            })
         }
     },
     mounted() {

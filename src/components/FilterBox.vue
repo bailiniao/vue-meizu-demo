@@ -7,6 +7,7 @@
           <li
             class="fl filter-item"
             :class="{'active' : activeFilter[item.key]==info.value}"
+        
             v-for="(info,li) in item.queryList"
             :key="li"
             @click="changeFilter(item.key,info.value)"
@@ -40,6 +41,8 @@ export default {
 	  this.$emit('filterData',this.activeFilter)
     }
   },
+
+  
   mounted() {
     // console.log(this.activeFilter);
   }
