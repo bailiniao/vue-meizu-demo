@@ -5,7 +5,13 @@
             <table class="shopcart-header">
                 <tr>
                     <td class="cart-select">
-                        <input type="checkbox" class="cart-checkbox" />
+                        <input
+                            style="cursor: pointer"
+                            @click="choseAll"
+                            :checked="isAllChecked"
+                            type="checkbox"
+                            class="cart-checkbox"
+                        />
                         <span>全选</span>
                     </td>
                     <td class="cart-name">商品</td>
@@ -19,7 +25,13 @@
                 <table>
                     <tr v-for="(item,index) in shopcarData" :key="index" class="cart-product">
                         <td class="cart-select">
-                            <input type="checkbox" class="cart-checkbox" />
+                            <input
+                                style="cursor: pointer"
+                                :checked="item.data.checked"
+                                type="checkbox"
+                                class="cart-checkbox"
+                                @click="choseGoods(item.data.id)"
+                            />
                             <img class="cart-img" :src="item.data.imageUrl" alt />
                         </td>
                         <td class="cart-name">
@@ -29,35 +41,53 @@
                         <td class="cart-price">￥{{item.data.goodsPrice}}</td>
                         <td class="cart-num">
                             <div class="cart-input clearfix">
-                                <button class="fl" @click="subNumber(item.data.id)">-</button>
+                                <button
+                                    class="fl"
+                                    @click="subNumber(item.data.id)"
+                                    style="cursor: pointer"
+                                >-</button>
                                 <input class="fl" v-model="item.number" type="number" />
-                                <button class="fl" @click="addNumber(item.data.id)">+</button>
+                                <button
+                                    class="fl"
+                                    @click="addNumber(item.data.id)"
+                                    style="cursor: pointer"
+                                >+</button>
                             </div>
                         </td>
                         <td class="cart-total">￥{{item.data.goodsPrice*item.number}}</td>
                         <td class="cart-operate">
-                            <i class="icon-font icon-close"></i>
+                            <i
+                                @click="deleteGoods(index)"
+                                style="cursor: pointer"
+                                class="icon-font icon-close"
+                            ></i>
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="claerfix shopcart-footer">
                 <div class="fl">
-                    <input type="checkbox" class="cart-checkbox" />
+                    <input
+                        style="cursor: pointer"
+                        @click="choseAll"
+                        :checked="isAllChecked"
+                        type="checkbox"
+                        class="cart-checkbox"
+                    />
                     <span>全选</span>
                     <span class="footer-remove">删除选中的商品</span>
                     <span>
                         共
-                        <span class="footer-number gray">3</span>件商品，已选
-                        <span class="footer-number blue">3</span>件商品
+                        <span class="footer-number gray">{{allGoodsNumber}}</span>件商品，已选
+                        <span class="footer-number blue">{{isChoseGoods}}</span>件商品
                     </span>
                 </div>
                 <div class="fr">
                     <span>
                         已优惠
                         <span class="footer-number red">0.00</span>元，合计(不含运费)：
-                        <span class="footer-number red footer-total">￥4000</span>
-                        <a href class="btn success">去结算</a>
+                        <span class="footer-number red footer-total">￥{{priceTotal}}</span>
+                        <a class="btn success" :class="{'cancel':isChoseGoods<=0}" @click="goToOrder">去结算</a>
                     </span>
                 </div>
             </div>
@@ -71,17 +101,28 @@
                 </div>
             </div>
         </div>
+
+        <DelShopCarBox :index="Goddsindex" @closeWindowBox="recive" v-show="WindowBoxShow"></DelShopCarBox>
         <Footer></Footer>
     </div>
 </template>
 <script>
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer";
+import DelShopCarBox from "@/components/DelShopCarBox";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
+    data() {
+        return {
+            WindowBoxShow: false,
+            Goddsindex: ""
+        };
+    },
     components: {
         Header,
-        Footer
+        Footer,
+        DelShopCarBox
     },
     methods: {
         goToIndex() {
@@ -89,17 +130,65 @@ export default {
                 name: "index"
             });
         },
+        ...mapMutations([
+            "shopCarNumberAdd",
+            "shopCarNumberSub",
+            "checkedGoods",
+            "choseAllGoods",
+            "delGoods"
+        ]),
+        // addNumber(id) {
+        //     this.$store.commit('shopCarNumberAdd',id)
+        // },
+        // subNumber(id) {
+        //     this.$store.commit('shopCarNumberSub',id)
+        // }
         addNumber(id) {
-            this.$store.commit('shopCarNumberAdd',id)
+            this.shopCarNumberAdd(id);
         },
         subNumber(id) {
-            this.$store.commit('shopCarNumberSub',id)
+            this.shopCarNumberSub(id);
+        },
+        choseGoods(id) {
+            this.checkedGoods(id);
+        },
+        choseAll() {
+            this.choseAllGoods(this.isAllChecked);
+        },
+        deleteGoods(index) {
+            this.WindowBoxShow = true;
+            this.Goddsindex = index;
+            // if (this.del) {
+            //     this.delGoods(index);
+            // }
+
+            // this.delGoods(index);
+        },
+        recive(data) {
+            if (!data) {
+                this.WindowBoxShow = false;
+            }
+            // console.log(data);
+        },
+        goToOrder(){
+            this.$router.push({
+                name:'order'
+            })
         }
     },
     computed: {
         shopcarData() {
             return this.$store.state.shopCarData;
-        }
+        },
+        ...mapGetters([
+            "isAllChecked",
+            "isChoseGoods",
+            "priceTotal",
+            "allGoodsNumber"
+        ])
+        // isAllChecked(){
+        //     return this.$store.getters.isAllChecked
+        // }
     }
 };
 </script>

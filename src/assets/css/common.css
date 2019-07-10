@@ -68,3 +68,8 @@ html {
   border-color: #efefef;
   background-color: #efefef;
 }
+
+.cancel:hover {
+  border-color: #f6f6f6;
+  background-color: #f6f6f6;
+}

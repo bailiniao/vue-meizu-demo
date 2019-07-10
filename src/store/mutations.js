@@ -12,6 +12,7 @@ export default {
 
     if (!haveData) {
       Vue.set(goodsDetailData.data, "goodsNumber", goodsDetailData.number);
+      Vue.set(goodsDetailData.data, "checked", true);
       state.shopCarData.push(goodsDetailData);
     }
 
@@ -33,5 +34,21 @@ export default {
         item.number--;
       }
     });
+  },
+  checkedGoods(state, id) {
+    state.shopCarData.forEach((item) => {
+      if (item.data.id == id) {
+        item.data.checked = !item.data.checked;
+      }
+    });
+    // console.log(state);
+  },
+  choseAllGoods(state, allChose) {
+    state.shopCarData.forEach((item) => {
+      item.data.checked = !allChose;
+    });
+  },
+  delGoods(state,index){
+    state.shopCarData.splice(index,1)
   }
 };

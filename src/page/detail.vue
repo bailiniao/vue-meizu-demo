@@ -84,6 +84,7 @@
                 />
             </div>
         </div>
+        <AddCorifmShopCarBox @closeWindowBox="recive" v-show="WindowBoxShow"></AddCorifmShopCarBox>
         <Footer></Footer>
     </div>
 </template>
@@ -92,18 +93,22 @@
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer";
 import ImagesList from "@/components/ImagesList";
+import AddCorifmShopCarBox from "@/components/AddCorifmShopCarBox";
+
 export default {
     data() {
         return {
             // 存放当前一条数据的详情
             goodsDetailData: [],
-            goodsNumber: 1
+            goodsNumber: 1,
+            WindowBoxShow: false,
         };
     },
     components: {
         Header,
         Footer,
-        ImagesList
+        ImagesList,
+        AddCorifmShopCarBox
     },
     methods: {
         //通过每条数据的ID请求
@@ -128,6 +133,7 @@ export default {
                 data: this.goodsDetailData,
                 number: this.goodsNumber
             });
+            this.WindowBoxShow=true;
         },
         goToShopCar() {
             this.$store.commit("shopCarData", {
@@ -137,7 +143,13 @@ export default {
             this.$router.push({
                 name: "shopcar"
             });
-        }
+        },
+        recive(data) {
+            if (!data) {
+                this.WindowBoxShow = false;
+            }
+            // console.log(data);
+        },
     },
     mounted() {
         // 通过传递当前页面的route的params.id
